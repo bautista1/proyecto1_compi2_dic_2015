@@ -1,0 +1,279 @@
+package fase1;
+import java_cup.runtime.*;
+import java.util.LinkedList;
+//import lienzoBAT.ErrorSin;
+import java_cup.runtime.Symbol;
+//import lienzoBAT.Errores;
+//import proyecto1_201020414.pantalla;
+
+parser code
+{:
+/**Metodo al que se llama automáticamente ante algún error sintactico.*/
+public void syntax_error(Symbol s){
+System.out.println("No se pudo recuperar del error " + (s.right+1)+ "Columna "+s.left+". Identificador " + s.value + " no reconocido.");
+// pantalla.errorLexLienzo(String.valueOf(s.value),String.valueOf(s.left),String.valueOf(s.right+1),"Sintactico"); 
+
+}
+/**Metodo al que se llama en el momento en que ya no es posible una recuperación de errores.*/
+public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+System.out.println("No se pudo recuperar del error " + (s.right+1)+ "Columna "+s.left+". Identificador " + s.value + " no reconocido.");
+// pantalla.errorLexLienzo(String.valueOf(s.value),String.valueOf(s.left),String.valueOf(s.right+1),"Sintactico"); 
+}
+/*Metodo que uso para verificar si el color es repetido*/
+
+:}
+action code
+{:
+
+
+:}
+/*Declaracion de simbolos terminales*/
+terminal enteroL,doubleL,cadenaL,caracterL;
+terminal boolL,vacioL,nuevo,clasesL,falso,verdadero;
+terminal si,sino,sinosi,interruptor,encaso,pordefecto,detener,continuar;
+terminal mientras,hacer,repite,hasta,para,ciclo,imprimir;
+terminal casteoInt,casteoDouble,casteoIString,casteoDString,casteoDI;
+terminal retorno,nulo,publico,privado,protegido;
+terminal importar,herencia,supeL,sobreescritura,este;
+terminal punto,parA,parC,llaveA,llaveC,corA,corC;
+terminal coma,dosPuntos,asignacion,puntoComa;
+terminal negacion,yLogico,oLogico,xorLogico;
+terminal comparacion,distinto,mayorIgual,menorIgual,mayor,menor;
+terminal suma,resta,por,div,pot,incremento,decremento;
+terminal num,decimal,id,caracter,path,cadena;
+
+
+
+/*Declaracion de simbolos NO terminales*/
+/* non terminal S,L,S1,S2,S3,S5,S6,S7,S8,S9,S10;
+non terminal Color S4;
+*/
+non terminal S,LENGUAJE_INTERNO,SENTENCIAS,SENTENCIA,TDP,TDR,VARIABLES,LV,ARREGLOS,DIM,METODOS,PARV,PARM,CLASES;
+non terminal CUP,CU,INSTANCIA,IMP,AR,CI,IF,SINO,SWITCH,CSW,CASO,CASOE,WHILE,CCICLO,DO_WHILE,REPEAT_UNTIL;
+non terminal FOR,LOOP,OP,OR,XOR,AND,OPR,OPA,TA;
+
+
+precedence left suma,resta;
+precedence left por,div;
+precedence left pot;
+precedence left incremento,decremento;
+
+precedence left llaveA,llaveC;
+precedence left corA,corC;
+precedence left parA,parC;
+
+
+
+/*Inicio de la gramatica*/
+start with S;
+
+S::=LENGUAJE_INTERNO 
+    ;
+LENGUAJE_INTERNO::=LENGUAJE_INTERNO CLASES
+    |CLASES
+;
+CLASES::=clasesL id llaveA dosPuntos CUP dosPuntos llaveC
+        |clasesL id herencia id llaveA dosPuntos CUP dosPuntos llaveC
+;
+
+CUP::=IMP SENTENCIAS
+     |SENTENCIAS
+;
+
+SENTENCIAS::= SENTENCIAS SENTENCIA   
+            |SENTENCIA
+;
+
+SENTENCIA::=VARIABLES
+            |INSTANCIA
+            |ARREGLOS
+            |METODOS
+            |id punto parA PARV parC puntoComa
+            |este punto id asignacion OP puntoComa
+            |sobreescritura METODOS
+;
+
+TDP::=enteroL
+    |doubleL
+    |caracterL
+    |boolL
+    |cadenaL
+    |vacioL
+;
+
+
+VARIABLES::=TDP LV puntoComa
+            |TDP LV asignacion OP puntoComa
+            |TA TDP LV asignacion OP puntoComa
+            |TA TDP LV puntoComa
+;
+
+LV::=LV coma id
+    |id
+;
+
+ARREGLOS::=TA TDP id DIM asignacion OP puntoComa
+           |TA TDP id DIM puntoComa
+           |TDP id DIM puntoComa
+           |TDP id DIM asignacion OP puntoComa
+;
+
+DIM::=DIM corA OP corC
+    |corA OP corC
+;
+
+
+METODOS::=TDP id parA parC llaveA dosPuntos CU dosPuntos llaveC
+        |TDP id parA PARM parC llaveA dosPuntos CU dosPuntos llaveC
+        |id parA parC llaveA dosPuntos CU dosPuntos llaveC
+        |id parA PARM parC llaveA dosPuntos CU dosPuntos llaveC
+        |TA TDP id parA parC llaveA dosPuntos CU dosPuntos llaveC
+        |TA TDP id parA PARM parC llaveA dosPuntos CU dosPuntos llaveC
+        |TA id parA parC llaveA dosPuntos CU dosPuntos llaveC
+        |TA id parA PARM parC llaveA dosPuntos CU dosPuntos llaveC
+;
+
+PARM::=PARM coma TDP id
+    |TDP id
+;
+
+PARV::=PARV coma OP
+       |OP
+;
+
+
+
+INSTANCIA::=id id asignacion nuevo id parA parC puntoComa
+            |id id asignacion nuevo id parA PARV parC puntoComa
+            |id id asignacion nulo
+;
+
+TA::=publico
+    |privado
+    |protegido
+;
+
+CU::=CU CI
+    |CI
+;
+
+IMP::=importar AR puntoComa
+;
+
+
+AR::=AR coma path
+    |path
+;
+
+CI::=IF
+    |SWITCH
+    |WHILE
+    |DO_WHILE
+    |REPEAT_UNTIL
+    |FOR
+    |LOOP
+    |vacioL imprimir parA OP parC puntoComa
+    |supeL parA PARV parC puntoComa
+    |supeL punto id  parA PARV parC puntoComa
+    |VARIABLES  
+    |ARREGLOS
+    |retorno OP puntoComa
+    |id asignacion OP puntoComa
+    |detener puntoComa
+;
+
+IF::=si parA OP parC llaveA dosPuntos CU dosPuntos llaveC SINO
+;
+
+SINO::=sino llaveA dosPuntos CU dosPuntos llaveC
+       |sino IF
+       |
+;
+
+SWITCH::=interruptor parA OP parC llaveA dosPuntos CSW dosPuntos llaveC
+;
+
+CSW::=CSW CASO
+      |CASO
+;
+
+CASO::=encaso OP dosPuntos CU CASOE
+      |pordefecto dosPuntos CU CASOE
+;
+CASOE::=detener puntoComa
+;
+
+WHILE::=mientras parA OP parC llaveA dosPuntos CCICLO dosPuntos llaveC
+;
+
+CCICLO::=CCICLO CI
+        |CCICLO continuar puntoComa
+        |CI
+        |continuar puntoComa
+;
+
+DO_WHILE::=hacer llaveA dosPuntos CCICLO dosPuntos llaveC mientras parA OP parC puntoComa
+;
+
+REPEAT_UNTIL::=repite llaveA dosPuntos CCICLO dosPuntos llaveC hasta parA OP parC puntoComa
+;
+
+FOR::=para parA id asignacion OP puntoComa OP puntoComa OP parC llaveA dosPuntos CCICLO dosPuntos llaveC
+;
+
+LOOP::=ciclo llaveA dosPuntos CI dosPuntos llaveC
+;
+
+
+
+OP::=OP oLogico OR
+    |OR
+;
+
+OR::=OR xorLogico XOR
+    |XOR
+;
+
+XOR::=XOR yLogico AND
+    |AND
+;
+
+AND::=negacion OPR
+    |OPR
+;
+
+OPR::=OPR mayor OPA
+    |OPR menor OPA
+    |OPR mayorIgual OPA
+    |OPR menorIgual OPA
+    |OPR comparacion OPA
+    |OPR distinto OPA
+    |OPA
+;
+
+
+OPA::=OPA suma OPA
+     |OPA resta OPA
+     |OPA por OPA
+     |OPA div OPA
+     |OPA pot OPA
+     |OPA incremento
+     |OPA decremento
+     |num
+     |decimal
+     |caracter
+     |cadena
+     |este punto id parA PARV parC
+     |este punto id parA parC
+     |este punto id 
+     |supeL punto id parA PARV parC
+     |supeL punto id 
+     |id parA PARV parC
+     |llaveA OP llaveC
+     |parA OP parC
+     |corA OP corC
+     |falso
+     |verdadero
+     |id
+
+;
