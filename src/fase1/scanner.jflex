@@ -124,7 +124,7 @@ comentario=({comentarioMultiple}|{comentarioLinea})
 
 ","        {return new Symbol(sF1.coma, yycolumn+1,yyline+1,new String(yytext()));}
 ":"        {return new Symbol(sF1.dosPuntos, yycolumn+1,yyline+1,new String(yytext()));}
-"=>"        {return new Symbol(sF1.asignacion, yycolumn+1,yyline+1,new String(yytext()));}
+"="        {return new Symbol(sF1.asignacion, yycolumn+1,yyline+1,new String(yytext()));}
 ";"        {return new Symbol(sF1.puntoComa, yycolumn+1,yyline+1,new String(yytext()));}
 
 "¡"        {return new Symbol(sF1.negacion, yycolumn+1,yyline+1,new String(yytext()));}
